@@ -29,7 +29,6 @@ public class LoginForm extends JFrame {
 
         gbc.gridx = 1;
         txtUser = new JTextField(15);
-        txtUser.setText("admin");
         panel.add(txtUser, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
