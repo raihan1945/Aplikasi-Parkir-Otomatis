@@ -1,4 +1,4 @@
-package Login;
+package AplikasiParkirOtomatis;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,7 @@ public class Login extends JFrame {
 
     public Login(){
         setContentPane(MainPanel);
-        setTitle("Login");
+        setTitle("AplikasiParkirOtomatis");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400,400);
         setLocationRelativeTo(null);
