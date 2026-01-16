@@ -2,18 +2,20 @@ package AplikasiParkirOtomatis;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InputParkirForm extends JFrame {
 
-    // Label realtime
-    JLabel lblTanggal;
-    JLabel lblJam;
+    JLabel lblTanggal, lblJam;
+    JTextField txtPlat;
+    JComboBox<String> cmbJenis;
 
     public InputParkirForm() {
         setTitle("Input Kendaraan");
-        setSize(500, 280);
+        setSize(500, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -25,6 +27,7 @@ public class InputParkirForm extends JFrame {
         JMenuItem menuInput = new JMenuItem("Input Kendaraan");
         JMenuItem menuData = new JMenuItem("Data Parkir");
         JMenuItem menuHistori = new JMenuItem("Histori Parkir");
+
         menuParkir.add(menuInput);
         menuParkir.add(menuData);
         menuParkir.add(menuHistori);
@@ -35,10 +38,12 @@ public class InputParkirForm extends JFrame {
             new ParkirForm();
             dispose();
         });
+
         menuHistori.addActionListener(e -> {
             new HistoriParkirForm();
             dispose();
         });
+
         // ===== FORM =====
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -46,24 +51,23 @@ public class InputParkirForm extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // ID Kendaraan
+        // Plat Nomor
         gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(new JLabel("ID Kendaraan"), gbc);
+        panel.add(new JLabel("Plat Nomor"), gbc);
 
         gbc.gridx = 1;
-        panel.add(new JTextField("", 20), gbc);
+        txtPlat = new JTextField(20);
+        panel.add(txtPlat, gbc);
 
         // Jenis Kendaraan
         gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Jenis Kendaraan"), gbc);
 
         gbc.gridx = 1;
-        JComboBox<String> cmbJenis = new JComboBox<>(
-                new String[]{"Motor", "Mobil"}
-        );
+        cmbJenis = new JComboBox<>(new String[]{"Motor", "Mobil"});
         panel.add(cmbJenis, gbc);
 
-        // Tanggal Masuk (REAL TIME)
+        // Tanggal Masuk
         gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Tanggal Masuk"), gbc);
 
@@ -71,7 +75,7 @@ public class InputParkirForm extends JFrame {
         lblTanggal = new JLabel();
         panel.add(lblTanggal, gbc);
 
-        // Jam Masuk (REAL TIME)
+        // Jam Masuk
         gbc.gridx = 0; gbc.gridy = 3;
         panel.add(new JLabel("Jam Masuk"), gbc);
 
@@ -82,27 +86,59 @@ public class InputParkirForm extends JFrame {
         // Submit
         gbc.gridx = 1; gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.EAST;
-        panel.add(new JButton("Submit"), gbc);
+        JButton btnSubmit = new JButton("Submit");
+        panel.add(btnSubmit, gbc);
 
         add(panel, BorderLayout.CENTER);
 
-        // ===== AKTIFKAN REAL TIME =====
         startDateTime();
+
+        // ===== EVENT SUBMIT =====
+        btnSubmit.addActionListener(e -> simpanData());
 
         setVisible(true);
     }
 
-    // ===== FUNGSI REAL TIME =====
+    // ===== REAL TIME CLOCK =====
     private void startDateTime() {
         Timer timer = new Timer(1000, e -> {
             Date now = new Date();
-
-            SimpleDateFormat sdfTanggal = new SimpleDateFormat("dd-MM-yyyy");
-            SimpleDateFormat sdfJam = new SimpleDateFormat("HH:mm:ss");
-
-            lblTanggal.setText(sdfTanggal.format(now));
-            lblJam.setText(sdfJam.format(now));
+            lblTanggal.setText(new SimpleDateFormat("yyyy-MM-dd").format(now));
+            lblJam.setText(new SimpleDateFormat("HH:mm:ss").format(now));
         });
         timer.start();
+    }
+
+    // ===== INSERT KE DATABASE =====
+    private void simpanData() {
+        String plat = txtPlat.getText().trim();
+        String jenis = cmbJenis.getSelectedItem().toString();
+
+        if (plat.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Plat nomor wajib diisi!");
+            return;
+        }
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            String sql =
+                    "INSERT INTO kendaraan (plat_nomor, jenis_kendaraan, waktu_masuk) " +
+                            "VALUES (?, ?, NOW())";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, plat);
+            ps.setString(2, jenis);
+            System.out.println(plat);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Data kendaraan berhasil disimpan");
+
+            txtPlat.setText("");
+            cmbJenis.setSelectedIndex(0);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Gagal menyimpan data!");
+        }
     }
 }
