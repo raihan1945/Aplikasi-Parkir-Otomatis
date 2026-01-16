@@ -14,10 +14,13 @@ public class ParkirForm extends JFrame {
     JTable table;
     DefaultTableModel model;
     JTextField txtBayar;
+    JTextField txtSearch;
 
     JLabel lblTanggal;
     JLabel lblJam;
-    JLabel lblCounter; // COUNTER KENDARAAN
+    JLabel lblCounter;
+
+    int selectedId = -1;
 
     public ParkirForm() {
         setTitle("Data Parkir");
@@ -32,43 +35,81 @@ public class ParkirForm extends JFrame {
 
         JMenuItem menuInput = new JMenuItem("Input Kendaraan");
         JMenuItem menuData = new JMenuItem("Data Parkir");
-
+        JMenuItem menuHistori = new JMenuItem("Histori Parkir");
         menuParkir.add(menuInput);
         menuParkir.add(menuData);
+        menuParkir.add(menuHistori);
         menuBar.add(menuParkir);
         setJMenuBar(menuBar);
 
         menuInput.addActionListener(e -> {
+            if (jumlahKendaraanParkir() >= 100) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Kapasitas parkir sudah penuh!\nMaksimal 100 kendaraan.",
+                        "Peringatan",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
             new InputParkirForm();
             dispose();
         });
-
-        // ===== TOP PANEL (SEARCH + COUNTER) =====
+        menuHistori.addActionListener(e -> {
+            new HistoriParkirForm();
+            dispose();
+        });
+        // ===== TOP PANEL =====
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(new JLabel("Search"));
-        topPanel.add(new JTextField(20));
+
+        txtSearch = new JTextField(20);
+        topPanel.add(txtSearch);
 
         lblCounter = new JLabel("Jumlah Kendaraan: 0");
         lblCounter.setFont(new Font("Arial", Font.BOLD, 12));
         lblCounter.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-
         topPanel.add(lblCounter);
+
         add(topPanel, BorderLayout.NORTH);
 
-        // ===== TABLE (DATABASE) =====
+        // ===== TABLE (ID TIDAK BISA DIEDIT) =====
         String[] kolom = {
+                "ID",
                 "Plat Nomor",
                 "Jenis Kendaraan",
                 "Waktu Masuk",
                 "Waktu Keluar"
         };
 
-        model = new DefaultTableModel(null, kolom);
+        model = new DefaultTableModel(null, kolom) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // SEMUA KOLOM READ-ONLY
+            }
+        };
+
         table = new JTable(model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // LOAD DATA
-        loadDataKendaraan();
+        // ===== AMBIL ID SAAT BARIS DIKLIK =====
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                selectedId = Integer.parseInt(
+                        table.getValueAt(table.getSelectedRow(), 0).toString()
+                );
+            }
+        });
+
+        // ===== SEARCH =====
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                loadDataKendaraan(txtSearch.getText());
+            }
+        });
+
+        loadDataKendaraan("");
 
         // ===== BOTTOM PANEL =====
         JPanel bottomPanel = new JPanel(new GridBagLayout());
@@ -80,12 +121,13 @@ public class ParkirForm extends JFrame {
         bottomPanel.add(new JLabel("Bayar"), gbc);
 
         gbc.gridx = 1;
-        txtBayar = new JTextField("0", 8);
+        txtBayar = new JTextField("", 8);
         bottomPanel.add(txtBayar, gbc);
 
         gbc.gridx = 2;
         JButton btnOk = new JButton("OK");
         bottomPanel.add(btnOk, gbc);
+        btnOk.addActionListener(e -> updateWaktuKeluar());
 
         gbc.gridx = 3;
         bottomPanel.add(new JLabel("Tanggal"), gbc);
@@ -107,22 +149,65 @@ public class ParkirForm extends JFrame {
         setVisible(true);
     }
 
-    // ===== LOAD DATA + UPDATE COUNTER =====
-    private void loadDataKendaraan() {
+    // ===== UPDATE WAKTU KELUAR =====
+    private void updateWaktuKeluar() {
+        if (selectedId == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih kendaraan terlebih dahulu!");
+            return;
+        }
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            String waktuKeluar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+            String sql = "UPDATE kendaraan SET waktu_keluar = ? WHERE id_kendaraan = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, waktuKeluar);
+            ps.setInt(2, selectedId);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Kendaraan berhasil keluar");
+            selectedId = -1;
+            loadDataKendaraan("");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Gagal update waktu keluar");
+        }
+    }
+
+    // ===== HITUNG KENDARAAN PARKIR =====
+    private int jumlahKendaraanParkir() {
+        int total = 0;
+        try {
+            Connection conn = DBConnection.getConnection();
+            ResultSet rs = conn.prepareStatement(
+                    "SELECT COUNT(*) FROM kendaraan WHERE waktu_keluar IS NULL"
+            ).executeQuery();
+            if (rs.next()) total = rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    // ===== LOAD DATA =====
+    private void loadDataKendaraan(String keyword) {
         try {
             Connection conn = DBConnection.getConnection();
 
-            // DATA TABEL
-            String sqlData =
-                    "SELECT plat_nomor, jenis_kendaraan, waktu_masuk, waktu_keluar " +
-                            "FROM kendaraan WHERE waktu_keluar IS NULL";
-            PreparedStatement ps = conn.prepareStatement(sqlData);
+            String sql =
+                    "SELECT id_kendaraan, plat_nomor, jenis_kendaraan, waktu_masuk, waktu_keluar " +
+                            "FROM kendaraan WHERE waktu_keluar IS NULL AND plat_nomor LIKE ?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + keyword + "%");
             ResultSet rs = ps.executeQuery();
 
             model.setRowCount(0);
-
             while (rs.next()) {
                 model.addRow(new Object[]{
+                        rs.getInt("id_kendaraan"),
                         rs.getString("plat_nomor"),
                         rs.getString("jenis_kendaraan"),
                         rs.getString("waktu_masuk"),
@@ -130,23 +215,14 @@ public class ParkirForm extends JFrame {
                 });
             }
 
-            // COUNTER
-            String sqlCount =
-                    "SELECT COUNT(*) AS total FROM kendaraan WHERE waktu_keluar IS NULL";
-            PreparedStatement psCount = conn.prepareStatement(sqlCount);
-            ResultSet rsCount = psCount.executeQuery();
-
-            if (rsCount.next()) {
-                lblCounter.setText("Jumlah Kendaraan: " + rsCount.getInt("total"));
-            }
+            lblCounter.setText("Jumlah Kendaraan: " + jumlahKendaraanParkir());
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Gagal memuat data parkir");
         }
     }
 
-    // ===== REAL TIME DATE & TIME =====
+    // ===== JAM REALTIME =====
     private void startDateTime() {
         Timer timer = new Timer(1000, e -> {
             Date now = new Date();

@@ -24,9 +24,10 @@ public class InputParkirForm extends JFrame {
 
         JMenuItem menuInput = new JMenuItem("Input Kendaraan");
         JMenuItem menuData = new JMenuItem("Data Parkir");
-
+        JMenuItem menuHistori = new JMenuItem("Histori Parkir");
         menuParkir.add(menuInput);
         menuParkir.add(menuData);
+        menuParkir.add(menuHistori);
         menuBar.add(menuParkir);
         setJMenuBar(menuBar);
 
@@ -34,7 +35,10 @@ public class InputParkirForm extends JFrame {
             new ParkirForm();
             dispose();
         });
-
+        menuHistori.addActionListener(e -> {
+            new HistoriParkirForm();
+            dispose();
+        });
         // ===== FORM =====
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
