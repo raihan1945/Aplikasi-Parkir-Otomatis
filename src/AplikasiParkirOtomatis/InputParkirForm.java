@@ -47,7 +47,7 @@ public class InputParkirForm extends JFrame {
         panel.add(new JLabel("ID Kendaraan"), gbc);
 
         gbc.gridx = 1;
-        panel.add(new JTextField("B 6561 PMS", 20), gbc);
+        panel.add(new JTextField("", 20), gbc);
 
         // Jenis Kendaraan
         gbc.gridx = 0; gbc.gridy = 1;

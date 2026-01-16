@@ -2,7 +2,9 @@ package AplikasiParkirOtomatis;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class LoginForm extends JFrame {
 
@@ -42,21 +44,36 @@ public class LoginForm extends JFrame {
         JButton btnLogin = new JButton("Login");
         panel.add(btnLogin, gbc);
 
-        btnLogin.addActionListener(e -> {
-            String user = txtUser.getText();
-            String pass = new String(txtPass.getPassword());
+        btnLogin.addActionListener(e -> prosesLogin());
 
-            if(user.equals("admin") && pass.equals("admin")) {
+        add(panel, BorderLayout.CENTER);
+        setVisible(true);
+    }
+
+    // ===== LOGIN DATABASE =====
+    private void prosesLogin() {
+        try {
+            Connection conn = DBConnection.getConnection();
+            String sql = "SELECT * FROM user WHERE username=? AND password=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, txtUser.getText());
+            ps.setString(2, new String(txtPass.getPassword()));
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
                 JOptionPane.showMessageDialog(this, "Login Berhasil");
                 new ParkirForm();
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Login Gagal");
+                JOptionPane.showMessageDialog(this, "Username atau Password Salah");
             }
-        });
 
-        add(panel, BorderLayout.CENTER);
-        setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Koneksi database gagal");
+        }
     }
 
     public static void main(String[] args) {
