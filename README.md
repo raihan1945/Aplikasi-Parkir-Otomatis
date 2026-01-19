@@ -52,12 +52,3 @@ Kendaraan yang masih parkir ditampilkan dalam tabel data parkir dengan fitur pen
 **Driver Database:** JDBC MySQL.
 
 **IDE yang Disarankan:** IntelliJ IDEA / NetBeans / Eclipse.
-
-## Rancangan diagram
-
-![Login Use Case](Image/login-usecase.png)
-![Login Use Case](Image/login-activitydiagram.png)
-![Login Use Case](Image/kendaraanmasuk-usecase.png)
-![Login Use Case](Image/kendaraanmasuk-activitydiagram.png)
-![Login Use Case](Image/kendaraan%20keluar-usecase.png)
-![Login Use Case](Image/kendaraankeluar-activitydiagram.png)
