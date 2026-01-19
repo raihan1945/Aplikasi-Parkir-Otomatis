@@ -29,7 +29,7 @@ public class ParkirForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // ===== MENU BAR =====
+        // bar menu
         JMenuBar menuBar = new JMenuBar();
         JMenu menuParkir = new JMenu("Parkir");
 
@@ -59,7 +59,7 @@ public class ParkirForm extends JFrame {
             new HistoriParkirForm();
             dispose();
         });
-        // ===== TOP PANEL =====
+        // panel atas
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(new JLabel("Search"));
 
@@ -78,14 +78,13 @@ public class ParkirForm extends JFrame {
                 "ID",
                 "Plat Nomor",
                 "Jenis Kendaraan",
-                "Waktu Masuk",
-                "Waktu Keluar"
+                "Waktu Masuk"
         };
 
         model = new DefaultTableModel(null, kolom) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // SEMUA KOLOM READ-ONLY
+                return false; // kolom read-only
             }
         };
 
@@ -93,7 +92,18 @@ public class ParkirForm extends JFrame {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // ===== AMBIL ID SAAT BARIS DIKLIK =====
+        table.getColumnModel().getColumn(0).setMinWidth(0);
+        table.getColumnModel().getColumn(0).setMaxWidth(0);
+        table.getColumnModel().getColumn(0).setWidth(0);
+        table.getColumnModel().getColumn(0).setPreferredWidth(0);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(20, 50, 50, 50));
+
+        add(scrollPane, BorderLayout.CENTER);
+
+        // pengambilan id saat di 'klik'
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
                 selectedId = Integer.parseInt(
@@ -102,7 +112,7 @@ public class ParkirForm extends JFrame {
             }
         });
 
-        // ===== SEARCH =====
+        // search
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent e) {
                 loadDataKendaraan(txtSearch.getText());
@@ -111,7 +121,7 @@ public class ParkirForm extends JFrame {
 
         loadDataKendaraan("");
 
-        // ===== BOTTOM PANEL =====
+        // panel bawah
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 8, 5, 8);
@@ -149,7 +159,7 @@ public class ParkirForm extends JFrame {
         setVisible(true);
     }
 
-    // ===== UPDATE WAKTU KELUAR =====
+    // update saat kendaraan keluar
     private void updateWaktuKeluar() {
         if (selectedId == -1) {
             JOptionPane.showMessageDialog(this, "Pilih kendaraan terlebih dahulu!");
@@ -196,7 +206,7 @@ public class ParkirForm extends JFrame {
         }
     }
 
-    // ===== HITUNG KENDARAAN PARKIR =====
+    // menghitung kendaraan yang di parkirkan
     private int jumlahKendaraanParkir() {
         int total = 0;
         try {
@@ -211,7 +221,7 @@ public class ParkirForm extends JFrame {
         return total;
     }
 
-    // ===== LOAD DATA =====
+    // load data
     private void loadDataKendaraan(String keyword) {
         try {
             Connection conn = DBConnection.getConnection();
@@ -230,8 +240,7 @@ public class ParkirForm extends JFrame {
                         rs.getInt("id_kendaraan"),
                         rs.getString("plat_nomor"),
                         rs.getString("jenis_kendaraan"),
-                        rs.getString("waktu_masuk"),
-                        rs.getString("waktu_keluar")
+                        rs.getString("waktu_masuk")
                 });
             }
 
@@ -242,7 +251,7 @@ public class ParkirForm extends JFrame {
         }
     }
 
-    // ===== JAM REALTIME =====
+    // jam(real-time)
     private void startDateTime() {
         Timer timer = new Timer(1000, e -> {
             Date now = new Date();

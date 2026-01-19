@@ -21,7 +21,7 @@ public class HistoriParkirForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // ===== MENU BAR =====
+        // bar menu
         JMenuBar menuBar = new JMenuBar();
         JMenu menuParkir = new JMenu("Parkir");
 
@@ -42,7 +42,7 @@ public class HistoriParkirForm extends JFrame {
             new ParkirForm();
             dispose();
         });
-        // ===== TOP PANEL =====
+        // panel atas
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(new JLabel("Search"));
 
@@ -56,7 +56,7 @@ public class HistoriParkirForm extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // ===== TABLE =====
+        // tabel
         String[] kolom = {
                 "ID",
                 "Plat Nomor",
@@ -76,7 +76,18 @@ public class HistoriParkirForm extends JFrame {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // ===== SEARCH EVENT =====
+        table.getColumnModel().getColumn(0).setMinWidth(0);
+        table.getColumnModel().getColumn(0).setMaxWidth(0);
+        table.getColumnModel().getColumn(0).setWidth(0);
+        table.getColumnModel().getColumn(0).setPreferredWidth(0);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(20, 50, 50, 50));
+
+        add(scrollPane, BorderLayout.CENTER);
+
+        // search
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent e) {
                 loadHistori(txtSearch.getText());
@@ -87,7 +98,7 @@ public class HistoriParkirForm extends JFrame {
         setVisible(true);
     }
 
-    // ===== LOAD HISTORI PARKIR =====
+    // load histori parkir
     private void loadHistori(String keyword) {
         try {
             Connection conn = DBConnection.getConnection();

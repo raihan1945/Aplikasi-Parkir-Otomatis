@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.sql.ResultSet;
 
 public class InputParkirForm extends JFrame {
 
@@ -20,7 +21,7 @@ public class InputParkirForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // bar
+        // bar menu
         JMenuBar menuBar = new JMenuBar();
         JMenu menuParkir = new JMenu("Parkir");
 
@@ -120,6 +121,21 @@ public class InputParkirForm extends JFrame {
         }
         try {
             Connection conn = DBConnection.getConnection();
+
+            String sqlCek = "SELECT COUNT(*) FROM kendaraan WHERE waktu_keluar IS NULL";
+            PreparedStatement psCek = conn.prepareStatement(sqlCek);
+            ResultSet rsCek = psCek.executeQuery();
+
+            if (rsCek.next()) {
+                int jumlahSaatIni = rsCek.getInt(1);
+                if (jumlahSaatIni >= 100) {
+                    JOptionPane.showMessageDialog(this,
+                            "Parkir Penuh! Kapasitas maksimal 100 kendaraan.\nTidak bisa menambah kendaraan baru.",
+                            "Kapasitas Penuh",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
 
             String sql =
                     "INSERT INTO kendaraan (plat_nomor, jenis_kendaraan, waktu_masuk) " +
