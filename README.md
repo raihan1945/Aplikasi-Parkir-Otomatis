@@ -54,4 +54,4 @@ Kendaraan yang masih parkir ditampilkan dalam tabel data parkir dengan fitur pen
 **IDE yang Disarankan:** IntelliJ IDEA / NetBeans / Eclipse.
 
 **Rancangan diagram
-![Login use case)[Image/login-usecase.png]
+![Login Use Case](Image/login-usecase.png)
