@@ -156,7 +156,22 @@ public class ParkirForm extends JFrame {
             return;
         }
 
+        String inputBayar = txtBayar.getText().trim();
+
+        if (inputBayar.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Kolom 'Bayar' tidak boleh kosong!", "Error Input", JOptionPane.ERROR_MESSAGE);
+            txtBayar.requestFocus();
+            return;
+        }
+
         try {
+            double nominal = Double.parseDouble(inputBayar);
+
+            if (nominal < 0) {
+                JOptionPane.showMessageDialog(this, "Nominal bayar tidak boleh minus!", "Error Input", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             Connection conn = DBConnection.getConnection();
             String waktuKeluar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -168,11 +183,16 @@ public class ParkirForm extends JFrame {
 
             JOptionPane.showMessageDialog(this, "Kendaraan berhasil keluar");
             selectedId = -1;
+            txtBayar.setText("");
             loadDataKendaraan("");
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Masukkan angka yang valid pada kolom bayar!", "Format Salah", JOptionPane.ERROR_MESSAGE);
+            txtBayar.selectAll();
+            txtBayar.requestFocus();
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Gagal update waktu keluar");
+            JOptionPane.showMessageDialog(this, "Gagal update data ke database: " + e.getMessage());
         }
     }
 

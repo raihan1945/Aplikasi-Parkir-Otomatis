@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 16, 2026 at 07:18 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Waktu pembuatan: 19 Jan 2026 pada 11.53
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kendaraan`
+-- Struktur dari tabel `kendaraan`
 --
 
 CREATE TABLE `kendaraan` (
@@ -36,16 +36,12 @@ CREATE TABLE `kendaraan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `kendaraan`
+-- Dumping data untuk tabel `kendaraan`
 --
 
 INSERT INTO `kendaraan` (`id_kendaraan`, `plat_nomor`, `jenis_kendaraan`, `waktu_masuk`, `waktu_keluar`) VALUES
-(1, '123asd', 'Motor', '2026-01-17 00:26:04', '2026-01-17 00:26:04'),
-(2, '123asdsdaf', 'Mobil', '2026-01-17 01:15:02', NULL),
-(3, '321dsadsdfs', 'Motor', '2026-01-17 01:15:02', NULL),
-(4, 'plat_nomor', 'jenis_kendaraan', '2026-01-17 01:15:02', NULL),
-(5, 'B3091XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
-(6, 'B6535XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
+(5, 'B3091XYZ', 'Motor', '2026-01-19 17:31:46', '2026-01-19 17:31:46'),
+(6, 'B6535XYZ', 'Motor', '2026-01-19 17:32:22', '2026-01-19 17:32:22'),
 (7, 'B5553XYZ', 'Mobil', '2026-01-17 00:30:24', '2026-01-17 00:30:24'),
 (8, 'B9550XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
 (9, 'B4078XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
@@ -99,7 +95,7 @@ INSERT INTO `kendaraan` (`id_kendaraan`, `plat_nomor`, `jenis_kendaraan`, `waktu
 (57, 'B8502XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
 (58, 'B6655XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
 (59, 'B3189XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
-(60, 'B2895XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
+(60, 'B2895XYZ', 'Mobil', '2026-01-19 17:52:37', '2026-01-19 17:52:37'),
 (61, 'B8947XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
 (62, 'B5073XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
 (63, 'B9586XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
@@ -140,12 +136,12 @@ INSERT INTO `kendaraan` (`id_kendaraan`, `plat_nomor`, `jenis_kendaraan`, `waktu
 (98, 'B1770XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
 (99, 'B8636XYZ', 'Motor', '2026-01-17 01:15:02', NULL),
 (100, 'B5700XYZ', 'Mobil', '2026-01-17 01:15:02', NULL),
-(101, 'ffdsafda 12313 asdf', 'Motor', '2026-01-17 01:16:15', NULL);
+(101, 'AB8648JX', 'Mobil', '2026-01-19 17:30:28', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Struktur dari tabel `user`
 --
 
 CREATE TABLE `user` (
@@ -155,7 +151,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
+-- Dumping data untuk tabel `user`
 --
 
 INSERT INTO `user` (`id_user`, `username`, `password`) VALUES
@@ -166,29 +162,29 @@ INSERT INTO `user` (`id_user`, `username`, `password`) VALUES
 --
 
 --
--- Indexes for table `kendaraan`
+-- Indeks untuk tabel `kendaraan`
 --
 ALTER TABLE `kendaraan`
   ADD PRIMARY KEY (`id_kendaraan`);
 
 --
--- Indexes for table `user`
+-- Indeks untuk tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `kendaraan`
+-- AUTO_INCREMENT untuk tabel `kendaraan`
 --
 ALTER TABLE `kendaraan`
   MODIFY `id_kendaraan` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
   MODIFY `id_user` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;

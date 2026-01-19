@@ -50,7 +50,7 @@ public class LoginForm extends JFrame {
         setVisible(true);
     }
 
-    // ===== LOGIN DATABASE =====
+    // login database
     private void prosesLogin() {
         try {
             Connection conn = DBConnection.getConnection();

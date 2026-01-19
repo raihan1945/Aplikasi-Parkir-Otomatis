@@ -20,7 +20,7 @@ public class InputParkirForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // ===== MENU BAR =====
+        // bar
         JMenuBar menuBar = new JMenuBar();
         JMenu menuParkir = new JMenu("Parkir");
 
@@ -44,14 +44,14 @@ public class InputParkirForm extends JFrame {
             dispose();
         });
 
-        // ===== FORM =====
+        // form
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Plat Nomor
+        // plat nomor
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Plat Nomor"), gbc);
 
@@ -59,7 +59,7 @@ public class InputParkirForm extends JFrame {
         txtPlat = new JTextField(20);
         panel.add(txtPlat, gbc);
 
-        // Jenis Kendaraan
+        // jenis kendaraan
         gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Jenis Kendaraan"), gbc);
 
@@ -67,7 +67,7 @@ public class InputParkirForm extends JFrame {
         cmbJenis = new JComboBox<>(new String[]{"Motor", "Mobil"});
         panel.add(cmbJenis, gbc);
 
-        // Tanggal Masuk
+        // tanggal masuk
         gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Tanggal Masuk"), gbc);
 
@@ -75,7 +75,7 @@ public class InputParkirForm extends JFrame {
         lblTanggal = new JLabel();
         panel.add(lblTanggal, gbc);
 
-        // Jam Masuk
+        // jam Masuk
         gbc.gridx = 0; gbc.gridy = 3;
         panel.add(new JLabel("Jam Masuk"), gbc);
 
@@ -83,7 +83,7 @@ public class InputParkirForm extends JFrame {
         lblJam = new JLabel();
         panel.add(lblJam, gbc);
 
-        // Submit
+        // submit
         gbc.gridx = 1; gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.EAST;
         JButton btnSubmit = new JButton("Submit");
@@ -93,13 +93,13 @@ public class InputParkirForm extends JFrame {
 
         startDateTime();
 
-        // ===== EVENT SUBMIT =====
+        // button submit
         btnSubmit.addActionListener(e -> simpanData());
 
         setVisible(true);
     }
 
-    // ===== REAL TIME CLOCK =====
+    // real time clock
     private void startDateTime() {
         Timer timer = new Timer(1000, e -> {
             Date now = new Date();
@@ -109,7 +109,7 @@ public class InputParkirForm extends JFrame {
         timer.start();
     }
 
-    // ===== INSERT KE DATABASE =====
+    // insert ke database
     private void simpanData() {
         String plat = txtPlat.getText().trim();
         String jenis = cmbJenis.getSelectedItem().toString();
@@ -139,6 +139,8 @@ public class InputParkirForm extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Gagal menyimpan data!");
+//             error catcher
+//             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
 }
