@@ -13,7 +13,7 @@ Aplikasi terhubung ke database MySQL untuk menyimpan data kendaraan yang masuk d
 
 
 # Deskripsi Proyek
-> Aplikasi ini adalah sistem parkir pintar berbasis desktop yang membantu petugas mengelola kendaraaan masuk dan keluar secara terkomputerisasi menggunakan java dan mysql. Aplikasi menyediakan form login untuk otentikasi petugas, kemudian memungkinkan input data kendaraan yang masuk (plat nomor, jenis kendaraan, waktu masuk) ke tabel kendaraan di database.
+Aplikasi ini adalah sistem parkir pintar berbasis desktop yang membantu petugas mengelola kendaraaan masuk dan keluar secara terkomputerisasi menggunakan java dan mysql. Aplikasi menyediakan form login untuk otentikasi petugas, kemudian memungkinkan input data kendaraan yang masuk (plat nomor, jenis kendaraan, waktu masuk) ke tabel kendaraan di database.
 Kendaraan yang masih parkir ditampilkan dalam tabel data parkir dengan fitur pencarian dan informasi jumlah kendaraan yang sedang berada di area parkir. Saaat kendaraan keluar, petugas memindahkan data tersebut ke histori parkir yang bisa dilihat lengkap dengan fitur pencarian dan total kendaraan. Seluruh proses terhubung melalui kelas dbconnection yang mengatur koneksi ke database parkirpintar, sehingga pengelolaan parkir menjadi lebih terstruktur, rapi, dan mudah dipantau secara realtime
 
 ## Fitur Utama
@@ -55,4 +55,4 @@ Kendaraan yang masih parkir ditampilkan dalam tabel data parkir dengan fitur pen
 
 
 **Rancanan Model Diagram
-/image/login-use case.png
+![login-use case](/image/login-use case.png)
